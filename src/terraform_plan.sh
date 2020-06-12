@@ -17,8 +17,6 @@ function terraformPlan {
     echo "plan: info: successfully planned Terraform configuration in ${tfWorkingDir}"
     echo "${planOutput}"
     echo
-    echo "1 - set Terraform tf_actions_plan_has_changes to ${planHasChanges}"
-    echo
     echo ::set-output name=tf_actions_plan_has_changes::${planHasChanges}
     exit ${planExitCode}
   fi
@@ -80,7 +78,7 @@ ${planOutput}
   planOutput="${planOutput//$'\n'/'%0A'}"
   planOutput="${planOutput//$'\r'/'%0D'}"
 
-  echo "3 - set Terraform tf_actions_plan_output to ${planOutput}"
+  echo "3 - set Terraform tf_actions_plan_output ..."
   echo "::set-output name=tf_actions_plan_output::${planOutput}"
   exit ${planExitCode}
 }
