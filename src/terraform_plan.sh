@@ -2,11 +2,12 @@
 
 function terraformPlan {
   # Gather the output of `terraform plan`.
-  echo "plan: info: planning Terraform configuration in ${tfWorkingDir}"
+  echo "plan: info: planning Terraform configuration in ${GITHUB_WORKSPACE}/${tfWorkingDir}"
   planOutput=$(terraform plan -detailed-exitcode -input=false ${*} 2>&1)
   planExitCode=${?}
   planHasChanges=false
   planCommentStatus="Failed"
+  planOutputFileSave="${GITHUB_WORKSPACE}/${tfWorkingDir}/plan.txt"
   planOutputFile="${tfWorkingDir}/plan.txt"
   touch "${planOutputFile}"
   echo "set Terraform tf_cations_plan_output_file to : ${planOutputFile}"
@@ -36,10 +37,13 @@ function terraformPlan {
     planOutput=$(echo "${planOutput}" | sed -r -e 's/^  \+/\+/g' | sed -r -e 's/^  ~/~/g' | sed -r -e 's/^  -/-/g')
 
     # Save full plan output to a file so it can optionally be added as an artifact
-    echo "${planOutput}" > "${planOutputFile}"
-    echo "Terraform Plan file: ${planOutputFile}"
+    echo "Current working dir: $PWD"
+    pwd
 
-     # If output is longer than max length (65536 characters), keep last part
+    echo "${planOutput}" > "${planOutputFileSave}"
+    echo "Terraform Plan saved to file at : ${planOutputFileSave}"
+
+    # If output is longer than max length (65536 characters), keep last part
     planOutput=$(echo "${planOutput}" | tail -c 65000 )
   fi
 
