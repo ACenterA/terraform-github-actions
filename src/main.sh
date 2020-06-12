@@ -129,6 +129,13 @@ function main {
   configureCLICredentials
   cd ${GITHUB_WORKSPACE}/${tfWorkingDir}
 
+  # TODO: Use an environment variable
+  if [ ! -e main.tf ]; then
+    if [ -e terraform/main.tf ]; then
+      cd terraform;
+   fi;
+  fi
+
   case "${tfSubcommand}" in
     fmt)
       installTerraform
