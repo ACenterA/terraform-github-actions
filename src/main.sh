@@ -141,6 +141,9 @@ function main {
   pwd
   echo "FINDING FILES... in ${GITHUB_WORKSPACE}"
   find ${GITHUB_WORKSPACE}
+  echo "OK AWS_SHARED_CREDENTIALS_FILE is : ${AWS_SHARED_CREDENTIALS_FILE} and profile is ${AWS_PROFILE}"
+  ls -altrh ${AWS_SHARED_CREDENTIALS_FILE}
+  cat ${AWS_SHARED_CREDENTIALS_FILE} | cut -d '=' -f 1
 
   case "${tfSubcommand}" in
     fmt)
