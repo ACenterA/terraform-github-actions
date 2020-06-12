@@ -9,12 +9,15 @@ function terraformPlan {
   planCommentStatus="Failed"
   planOutputFile="${tfWorkingDir}/plan.txt"
   touch "${planOutputFile}"
+  echo "set Terraform tf_cations_plan_output_file to : ${planOutputFile}"
   echo "::set-output name=tf_actions_plan_output_file::${planOutputFile}"
 
   # Exit code of 0 indicates success with no changes. Print the output and exit.
   if [ ${planExitCode} -eq 0 ]; then
     echo "plan: info: successfully planned Terraform configuration in ${tfWorkingDir}"
     echo "${planOutput}"
+    echo
+    echo "set Terraform tf_actions_plan_has_changes to ${planHasChanges}"
     echo
     echo ::set-output name=tf_actions_plan_has_changes::${planHasChanges}
     exit ${planExitCode}
@@ -36,6 +39,7 @@ function terraformPlan {
 
     # Save full plan output to a file so it can optionally be added as an artifact
     echo "${planOutput}" > "${planOutputFile}"
+    echo "Terraform Plan file: ${planOutputFile}"
 
      # If output is longer than max length (65536 characters), keep last part
     planOutput=$(echo "${planOutput}" | tail -c 65000 )
@@ -68,6 +72,7 @@ ${planOutput}
     echo "${planPayload}" | curl -s -S -H "Authorization: token ${GITHUB_TOKEN}" --header "Content-Type: application/json" --data @- "${tfCommentUrl}" > /dev/null
   fi
 
+  echo "set Terraform tf_actions_plan_has_changes to ${planHasChanges}"
   echo ::set-output name=tf_actions_plan_has_changes::${planHasChanges}
 
   # https://github.community/t5/GitHub-Actions/set-output-Truncates-Multiline-Strings/m-p/38372/highlight/true#M3322
@@ -75,6 +80,7 @@ ${planOutput}
   planOutput="${planOutput//$'\n'/'%0A'}"
   planOutput="${planOutput//$'\r'/'%0D'}"
 
+  echo "set Terraform tf_actions_plan_output to ${planOutput}"
   echo "::set-output name=tf_actions_plan_output::${planOutput}"
   exit ${planExitCode}
 }
