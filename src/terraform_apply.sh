@@ -5,7 +5,9 @@ function terraformApply {
   echo "apply: info: applying Terraform configuration in ${tfWorkingDir}"
   echo "WOULD RUN terraform apply using auto approve and input... "
   echo "terraform apply -auto-approve -input=false ${*}"
-  applyOutput=$(xterraform apply -auto-approve -input=false ${*} 2>&1)
+  # applyOutput=$(xterraform apply -auto-approve -input=false ${*} 2>&1)
+  # applyOutput=$(terraform apply -auto-approve -input=false ${*} 2>&1)
+  applyOutput=$(terraform plan -input=false ${*} 2>&1)
   applyExitCode=${?}
   applyCommentStatus="Failed"
 
