@@ -130,11 +130,17 @@ function main {
   cd ${GITHUB_WORKSPACE}/${tfWorkingDir}
 
   # TODO: Use an environment variable
+  echo "Current working dir:"
+  pwd
   if [ ! -e main.tf ]; then
     if [ -e terraform/main.tf ]; then
       cd terraform;
    fi;
   fi
+  echo "GITHUB WORKSPACE TFWORKDIR IS : ${GITHUB_WORKSPACE}/${tfWorkingDir}"
+  pwd
+  echo "FINDING FILES... in ${GITHUB_WORKSPACE}"
+  find ${GITHUB_WORKSPACE}
 
   case "${tfSubcommand}" in
     fmt)
