@@ -17,7 +17,7 @@ function terraformPlan {
     echo "plan: info: successfully planned Terraform configuration in ${tfWorkingDir}"
     echo "${planOutput}"
     echo
-    echo "set Terraform tf_actions_plan_has_changes to ${planHasChanges}"
+    echo "1 - set Terraform tf_actions_plan_has_changes to ${planHasChanges}"
     echo
     echo ::set-output name=tf_actions_plan_has_changes::${planHasChanges}
     exit ${planExitCode}
@@ -72,7 +72,7 @@ ${planOutput}
     echo "${planPayload}" | curl -s -S -H "Authorization: token ${GITHUB_TOKEN}" --header "Content-Type: application/json" --data @- "${tfCommentUrl}" > /dev/null
   fi
 
-  echo "set Terraform tf_actions_plan_has_changes to ${planHasChanges}"
+  echo "2 - set Terraform tf_actions_plan_has_changes to ${planHasChanges}"
   echo ::set-output name=tf_actions_plan_has_changes::${planHasChanges}
 
   # https://github.community/t5/GitHub-Actions/set-output-Truncates-Multiline-Strings/m-p/38372/highlight/true#M3322
@@ -80,7 +80,7 @@ ${planOutput}
   planOutput="${planOutput//$'\n'/'%0A'}"
   planOutput="${planOutput//$'\r'/'%0D'}"
 
-  echo "set Terraform tf_actions_plan_output to ${planOutput}"
+  echo "3 - set Terraform tf_actions_plan_output to ${planOutput}"
   echo "::set-output name=tf_actions_plan_output::${planOutput}"
   exit ${planExitCode}
 }
