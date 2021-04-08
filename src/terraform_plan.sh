@@ -35,7 +35,7 @@ function terraformPlan {
     planOutput=$(echo "${planOutput}" | tail -c 65000 )
     echo
     echo ::set-output name=tf_actions_plan_has_changes::${planHasChanges}
-    exit ${planExitCode}
+    # exit ${planExitCode}
   fi
 
   # Exit code of 2 indicates success with changes. Print the output, change the
@@ -70,7 +70,7 @@ function terraformPlan {
   fi
 
   # Comment on the pull request if necessary.
-  if [ "${tfComment}" == "1" ] && [ -n "${tfCommentUrl}" ] && ([ "${planHasChanges}" == "true" ] || [ "${planCommentStatus}" == "Failed" ]); then
+  if [ "${tfComment}" == "1" ] && [ -n "${tfCommentUrl}" ] && ([ "${planHasChanges}" == "true" ] || [ "${planHasChanges}" == "false" ] || [ "${planCommentStatus}" == "Failed" ]); then
     planCommentWrapper="#### \`terraform plan\` ${planCommentStatus}
 <details><summary>Show Output</summary>
 
