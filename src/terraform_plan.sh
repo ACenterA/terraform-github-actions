@@ -19,6 +19,21 @@ function terraformPlan {
   if [ ${planExitCode} -eq 0 ]; then
     echo "${planOutput}"
     echo
+    if echo "${planOutput}" | egrep '^-{72}$' &> /dev/null; then
+        planOutput=$(echo "${planOutput}" | sed -n -r '/-{72}/,/-{72}/{ /-{72}/d; p }')
+    fi
+    planOutput=$(echo "${planOutput}" | sed -r -e 's/^  \+/\+/g' | sed -r -e 's/^  ~/~/g' | sed -r -e 's/^  -/-/g')
+
+    # Save full plan output to a file so it can optionally be added as an artifact
+    echo "Current working dir: $PWD"
+    pwd
+
+    echo "${planOutput}" > "${planOutputFileSave}"
+    echo "Terraform Plan saved to file at : ${planOutputFileSave}"
+
+    # If output is longer than max length (65536 characters), keep last part
+    planOutput=$(echo "${planOutput}" | tail -c 65000 )
+    echo
     echo ::set-output name=tf_actions_plan_has_changes::${planHasChanges}
     exit ${planExitCode}
   fi
