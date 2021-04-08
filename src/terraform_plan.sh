@@ -10,12 +10,13 @@ function terraformPlan {
   planOutputFileSave="${GITHUB_WORKSPACE}/${tfWorkingDir}/plan.txt"
   planOutputFile="${tfWorkingDir}/plan.txt"
   touch "${planOutputFile}"
+  echo "set Terraform planExitCode: ${planExitCode}"
   echo "set Terraform tf_cations_plan_output_file to : ${planOutputFile}"
   echo "::set-output name=tf_actions_plan_output_file::${planOutputFile}"
 
+  echo "plan: info: (${planExitCode}) successfully planned Terraform configuration in ${tfWorkingDir}"
   # Exit code of 0 indicates success with no changes. Print the output and exit.
   if [ ${planExitCode} -eq 0 ]; then
-    echo "plan: info: successfully planned Terraform configuration in ${tfWorkingDir}"
     echo "${planOutput}"
     echo
     echo ::set-output name=tf_actions_plan_has_changes::${planHasChanges}
@@ -28,7 +29,6 @@ function terraformPlan {
     planExitCode=0
     planHasChanges=true
     planCommentStatus="Success"
-    echo "plan: info: successfully planned Terraform configuration in ${tfWorkingDir}"
     echo "${planOutput}"
     echo
     if echo "${planOutput}" | egrep '^-{72}$' &> /dev/null; then
